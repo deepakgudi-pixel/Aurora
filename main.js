@@ -48,6 +48,8 @@ function sketch(){
     ring.scale.set(0.5, 0.5, 0.5)
     scene.add(ring)
 
+    gsap.fromTo(ring.position, {x: 0, y: -5, z: 0 }, {x: 0, y: 0, z: 0, duration: 1,  delay: 2})
+
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: 'section.details',
