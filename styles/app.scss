@@ -47,7 +47,7 @@ header {
 
   a.logo {
     font-size: 1.3rem;
-    color: black;
+    color: rgb(255, 255, 255);
   }
 
   a.collection {
@@ -65,6 +65,7 @@ header {
 }
 
 main {
+  
 
   .left {
     align-self:last baseline;
@@ -77,16 +78,19 @@ main {
       align-self:last baseline;
       font-weight: 300;
       margin: 0;
+      color: #fff;
     }
   }
   #gui { position: absolute; top: 2px; left: 2px }
   .right {
     height: 100vh;
-    flex: .65;
     display: none;
-    position: relative;
+    width: 100%;
+    position: absolute;
     pointer-events: none;
     overflow: hidden;
+    z-index: -1;
+    clip-path: polygon(50% 50%, 50% 50%, 50% 50%, 50% 50%);
 
     video {
       position: absolute;

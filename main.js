@@ -11,6 +11,14 @@ import Lenis from '@studio-freight/lenis'
 gsap.registerPlugin(TextPlugin);
 gsap.registerPlugin(ScrollTrigger);
 
+const screenTl = gsap.timeline();
+
+screenTl.to(".right", { 
+  clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
+  duration: 1.5,
+  ease: "power3.out",
+ })
+
 const loader = new GLTFLoader();
 let ring = null;
 let contactRotation = false;
@@ -39,6 +47,80 @@ function sketch(){
     ring.position.set(0,0,0)
     ring.scale.set(0.5, 0.5, 0.5)
     scene.add(ring)
+
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: 'section.details',
+        start: 'top bottom',
+        end: 'bottom top',
+        scrub: true
+      },
+      defaults: {
+        ease: 'power3.out',
+        duration: 3
+    }
+    })
+
+    tl.to(ring.position, {
+      x: 2,
+    })
+    .to(ring.scale, {
+      x: 0.25,
+      y: 0.25,
+      z: 0.25,
+    }, "<")
+    tl.to(ring.position, {
+      x: 0,
+    } )
+    tl.to(ring.rotation, {
+      x: 1,
+      y: 10,
+    }, "<")
+    .to(ring.scale, {
+      x: 0.5,
+      y: 0.5,
+      z: 0.5,
+    }, "<")
+   
+
+     // Function to toggle wireframe
+     function toggleWireframe(model, isWireframe, opacity) {
+ 
+      model.traverse(function(child){
+        if(child.isMesh && child.material){
+          child.material.wireframe = isWireframe;
+          child.material.opacity = opacity;
+          child.material.transparent = true;
+        }
+      })
+     }
+
+     const contactTl = gsap.timeline({
+      
+      scrollTrigger: {
+        trigger: "section.contact",
+        start: "top 80%",
+        end: "bottom center",
+        scrub: true,
+        onEnter: ()=>{
+          toggleWireframe(ring, true, 1)
+
+        },
+        onEnterBack: ()=> {
+          toggleWireframe(ring, true, 1)
+        },
+        onLeaveBack: () => {
+          toggleWireframe(ring, false, 1)
+        },
+        onLeave: () => {
+          toggleWireframe(ring, false, 1)
+        }
+
+      }
+
+     })
+
+    
 
     const directionalLight = new THREE.DirectionalLight('lightblue',10)
     directionalLight.position.z = 8
@@ -103,18 +185,18 @@ function initRenderLoop() {
         const elapsedTime = clock.getElapsedTime()
 
       // Update objects
-      if (ring) {
-        if (!contactRotation) {
-          ring.rotation.y = .5 * elapsedTime
-          ring.rotation.x = 0
-          ring.rotation.z = 0
-        }
-        else {
-          ring.rotation.y = 0
-          ring.rotation.x = .2 * elapsedTime
-          ring.rotation.z = .2 * elapsedTime
-        }
-      }
+      // if (ring) {
+      //   if (!contactRotation) {
+      //     ring.rotation.y = .5 * elapsedTime
+      //     ring.rotation.x = 0
+      //     ring.rotation.z = 0
+      //   }
+      //   else {
+      //     ring.rotation.y = 0
+      //     ring.rotation.x = .2 * elapsedTime
+      //     ring.rotation.z = .2 * elapsedTime
+      //   }
+      // }
 
 
   
