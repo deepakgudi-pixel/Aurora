@@ -15,7 +15,7 @@ const screenTl = gsap.timeline();
 
 screenTl.to(".right", { 
   clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
-  duration: 1.5,
+  duration: 3,
   ease: "power3.out",
  })
 
