@@ -11,13 +11,6 @@ import Lenis from '@studio-freight/lenis'
 gsap.registerPlugin(TextPlugin);
 gsap.registerPlugin(ScrollTrigger);
 
-const screenTl = gsap.timeline();
-
-screenTl.to(".right", { 
-  clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
-  duration: 3,
-  ease: "power3.out",
- })
 
 const loader = new GLTFLoader();
 let ring = null;
@@ -28,7 +21,6 @@ let renderer,scene,camera
 function sketch(){
 
     //debug
-
     const gui = new dat.GUI();
     dat.GUI.toggleHide();
 
@@ -48,7 +40,6 @@ function sketch(){
     ring.scale.set(0.5, 0.5, 0.5)
     scene.add(ring)
 
-    gsap.fromTo(ring.position, {x: 0, y: -5, z: 0 }, {x: 0, y: 0, z: 0, duration: 1,  delay: 2})
 
     const tl = gsap.timeline({
       scrollTrigger: {
@@ -63,9 +54,6 @@ function sketch(){
     }
     })
 
-    tl.to(ring.position, {
-      x: 2,
-    })
     .to(ring.scale, {
       x: 0.25,
       y: 0.25,
@@ -75,14 +63,37 @@ function sketch(){
       x: 0,
     } )
     tl.to(ring.rotation, {
-      x: 1,
-      y: 10,
+      y: Math.PI * 2,
     }, "<")
     .to(ring.scale, {
       x: 0.5,
       y: 0.5,
       z: 0.5,
     }, "<")
+
+    let targetSlider = document.querySelector('.slider')
+
+  const ringRotationTl = gsap.timeline({
+    scrollTrigger: {
+      trigger: '.slider',
+      start: 'bottom bottom',
+      end: 'bottom top',
+      scrub: 1,
+      end: () => "+=4" + targetSlider.offsetWidth
+    },
+    defaults: {
+      ease: 'power3.out',
+      duration: 3
+  }
+  })
+
+  ringRotationTl.to(ring.rotation, {
+    y: - Math.PI * 4,
+  });
+
+
+
+  
    
 
      // Function to toggle wireframe
@@ -177,6 +188,7 @@ window.addEventListener('resize', () =>
 
 }
 
+
 function initRenderLoop() {
 
     const clock = new THREE.Clock()
@@ -219,8 +231,149 @@ function initRenderLoop() {
         requestAnimationFrame(raf);
     }
     requestAnimationFrame(raf);
-  }
+ }
   
+
+ //animate words
+ function animateWords() {
+  const words = [
+    "Romance",
+    "Rings",
+    "Relationship",
+    "Love",
+    "Heart",
+    "Passion",
+    "Couples",
+    "Affection",
+    "Valentine",
+    "Forever",
+    "Commitment",
+    "Together",
+    "Cherish",
+    "Adoration",
+    "Embrace",
+    "Intimacy",
+    "Devotion",
+    "Soulmate",
+    "Happiness",
+    "Connection"
+  ]
+   let currentIndex = 0
+   let split
+   const textElement = document.querySelector('.primary-h1 span')
+ 
+   function updateText() {
+     textElement.textContent = words[currentIndex]
+     split = new SplitType(textElement, {type: "chars"})
+     animateChars(split.chars)
+     currentIndex = ( currentIndex + 1 ) % words.length
+   }
+
+   function animateChars(chars){
+    gsap.from(chars, {
+      yPercent: 100,
+      stagger: 0.03,
+      duration: 1.5,
+      ease: 'power4.out',
+      onComplete: () => {
+        if(split){
+          split.revert()
+        }
+      }
+    })
+   }
+
+    setInterval(updateText, 3000)
+
+  }
+
+  // Inspection section
+  function inspectionSection(){
+    const inspectionTl = gsap.timeline({
+       scrollTrigger: {
+        trigger: ".inspection",
+        start: "top bottom",
+        end: "bottom top",
+        scrub: true
+       }
+    })
+
+    inspectionTl.to('.inspection h2', {
+      y: -100,
+    })
+     .to('.ring-bg',{
+      y: -50,
+      height: 300
+     }, "<")
+
+
+     gsap.to(".marquee h3", {
+
+      scrollTrigger: {
+        trigger: ".marquee h3",
+        start: 'top 80%',
+        end: "bottom top",
+        scrub: true
+      },
+      x: 200,
+     })
+
+  }
+
+ //sliderSection
+
+  function sliderSection() {
+
+    let mm = gsap.matchMedia()
+  
+    mm.add("(min-width: 768px)", () => {
+  
+      let slider = document.querySelector('.slider')
+      let sliderSections = gsap.utils.toArray('.slide')
+
+      
+  
+      let sliderTl = gsap.timeline({
+        defaults: {
+          ease: 'none'
+        },
+        scrollTrigger: {
+          trigger: slider,
+          pin: true,
+          scrub: 1,
+          end: () => "+=" + slider.offsetWidth
+        }
+      })
+  
+      sliderTl
+        .to(slider, {
+          xPercent: -66
+        }, "<")
+        .to('.progress', {
+          width: '100%'
+        }, "<")
+  
+      sliderSections.forEach((stop, index) => {
+        const slideText = new SplitType(stop.querySelector('.slide-p'), { types: 'chars' });
+  
+        sliderTl.from(slideText.chars, {
+          opacity: 0,
+          y: 10,
+          stagger: .03,
+          scrollTrigger: {
+            trigger: stop.querySelector('.slide-p'),
+            start: 'top bottom',
+            end:   'bottom center',
+            containerAnimation: sliderTl,
+            scrub: true,
+          }
+        })
+      })
+  
+    })
+  
+  }
+
 
 
 
@@ -229,6 +382,9 @@ document.addEventListener('DOMContentLoaded', () => {
    sketch();
    initRenderLoop();
    smoothScroll();
+   animateWords();
+   inspectionSection();
+   sliderSection();
 
 
 })
