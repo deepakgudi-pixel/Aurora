@@ -46,7 +46,7 @@ function sketch(){
         trigger: 'section.details',
         start: 'top bottom',
         end: 'bottom top',
-        scrub: true
+        scrub: 1,
       },
       defaults: {
         ease: 'power3.out',
@@ -374,6 +374,43 @@ function initRenderLoop() {
   
   }
 
+  //contact section
+
+  function contactSection(){
+
+    gsap.set('h4, .inner-contact span', {
+      yPercent: 100
+    });
+    gsap.set('.inner-contact p', { 
+      opacity: 0
+    });
+  
+    const contactTl = gsap.timeline({
+      scrollTrigger: {
+        trigger: '.inner-contact',
+        start: "-20% center",
+        end: "10% 40%",
+        scrub: 4,
+      }
+    });
+  
+    contactTl.to('.line-top, .line-bottom', {
+      width: '100%',
+      duration: 1.5, // Slower animation duration
+      ease: 'power4.out' // Apply easing to the animation
+    })
+    .to('h4, .inner-contact span', {
+      yPercent: 0,
+      duration: 1, // Slower animation duration
+      ease: 'power3.out' // Apply easing to the animation
+    })
+    .to('.inner-contact p', {
+      opacity: 1,
+      duration: 0.8, // Slower animation duration
+      ease: 'power2.out' // Apply easing to the animation
+    });
+  
+  }
 
 
 
@@ -385,6 +422,7 @@ document.addEventListener('DOMContentLoaded', () => {
    animateWords();
    inspectionSection();
    sliderSection();
+   contactSection();
 
 
 })
