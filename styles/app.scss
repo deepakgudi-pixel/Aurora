@@ -16,6 +16,10 @@ a {
   color: black;
 }
 
+*::-webkit-scrollbar{
+  display: none;
+}
+
 .webgl
 {
     position: fixed;
@@ -133,6 +137,7 @@ section {
     font-weight: bold;
     border-radius: .3em;
     font-size: 1.4rem;
+    background-position: 50% 50%;
   }
 
 }
